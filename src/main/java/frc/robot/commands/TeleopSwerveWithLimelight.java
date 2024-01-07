@@ -23,7 +23,7 @@ public class TeleopSwerveWithLimelight extends CommandBase {
     private BooleanSupplier robotCentricSup;
 
     private Boolean ToggleApriltagSnap = false;
-    private Boolean ToggleButtonPressed = false;
+    private Boolean ToggleButtonPressed = true;
 
     private XboxController driverController;
 
@@ -43,6 +43,7 @@ public class TeleopSwerveWithLimelight extends CommandBase {
 
     @Override
     public void execute() {
+
         /* Get Values, Deadband*/
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
@@ -54,13 +55,13 @@ public class TeleopSwerveWithLimelight extends CommandBase {
 
         }  
 
-        if (ToggleApriltagSnap == true && l_Limelight.HorizontalOffset() > 5) {
+        if (ToggleApriltagSnap == true && l_Limelight.HorizontalOffset() > 3) {
 
-            rotationVal = .3;
+            rotationVal = .2;
 
-        }  else if (l_Limelight.HorizontalOffset() < -5) {
+        }  else if (ToggleApriltagSnap == true && l_Limelight.HorizontalOffset() < -3) {
 
-            rotationVal = -.3;
+            rotationVal = -.2;
 
         }  
  
@@ -71,6 +72,29 @@ public class TeleopSwerveWithLimelight extends CommandBase {
             !robotCentricSup.getAsBoolean(), 
             true
         );
+
+        // Toggle the Snap
+        if (driverController.getAButton() && ToggleButtonPressed == false) {
+
+            if (ToggleApriltagSnap == false) {
+
+                ToggleApriltagSnap = true;
+
+            } else {
+
+                ToggleApriltagSnap = false;
+
+            }
+
+            ToggleButtonPressed = true;
+
+        }
+
+        if (!driverController.getAButton()) {
+
+            ToggleButtonPressed = false;
+
+        }
 
     }
 
